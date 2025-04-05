@@ -221,3 +221,70 @@ excel形式は一つのexcelファイルにcsvをまとめて出力
 - loguru       色付きのコンソールのログ出力
 - openpyxl      excelファイルの出力
 - markdown_it   マークダウンからのヘディング部分の取り出し
+- pyyaml       YAMLファイルのパースと解析
+- typer        コマンドラインインターフェース
+- pyinstaller  実行ファイルの生成
+
+# ビルド
+
+## 実行ファイルのビルド
+
+実行ファイルのビルドはGitHub Actionsを使用して自動化されています。以下の方法でビルドを実行できます：
+
+### タグを使ったリリースビルド
+
+```bash
+git tag v{バージョン番号}  # 例: git tag v0.1.0
+git push origin v{バージョン番号}  # 例: git push origin v0.1.0
+```
+
+タグをプッシュすると、GitHub Actionsが自動的に実行ファイルをビルドし、GitHubのリリースページに公開します。
+
+### 手動ビルド
+
+GitHubウェブサイトから「Actions」タブで「Build Executables」ワークフローを選択し、「Run workflow」ボタンをクリックすることで手動ビルドを実行できます。
+
+または、`gh` コマンドを使用して：
+
+```bash
+gh workflow run "Build Executables" --repo tkykszk/markdown_to_testcase
+```
+
+## ビルド成果物
+
+以下のプラットフォーム向けの実行ファイルが生成されます：
+
+- Windows: `markdown_to_testcase.exe`
+- macOS: `markdown_to_testcase` (macOS用)
+- Linux: `markdown_to_testcase` (Linux用)
+
+## プライベートビルド情報
+
+### 環境要件
+
+- Python 3.12以上
+- PyInstallerによるバイナリビルド
+- GitHub Actionsのセルフホストランナーを使用する場合、各プラットフォームで以下の要件があります：
+  - Windows: Windows 10以上、Python 3.12
+  - macOS: macOS 11.0以上、Python 3.12
+  - Linux: Ubuntu 20.04以上、Python 3.12
+
+### CI/CD環境変数
+
+- `GITHUB_TOKEN`: GitHub Actionsでリリースを作成するために使用
+
+### ビルドコマンド
+
+ローカルでテストビルドする場合：
+
+```bash
+pyinstaller --onefile --name markdown_to_testcase main.py
+```
+
+### コード署名情報
+
+現在、バイナリファイルにはコード署名を適用していません。将来的に署名を適用する予定がある場合は、以下の情報を追加します：
+
+- 署名証明書の取得先
+- 署名プロセスの詳細
+- 証明書の保存と管理方法
