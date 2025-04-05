@@ -1,0 +1,80 @@
+name: Build Executables
+
+on:
+  push:
+    tags:
+      - 'v*'  # Run when a tag is pushed (e.g., v1.0.0)
+  workflow_dispatch:  # Allow manual execution
+
+jobs:
+  build:
+    name: Build for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+        include:
+          - os: windows-latest
+            output_name: markdown_to_testcase.exe
+            asset_name: markdown_to_testcase-windows.exe
+          - os: macos-latest
+            output_name: markdown_to_testcase
+            asset_name: markdown_to_testcase-macos
+          - os: ubuntu-latest
+            output_name: markdown_to_testcase
+            asset_name: markdown_to_testcase-linux
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller
+        pip install -r requirements.txt
+
+    - name: Build with PyInstaller
+      run: |
+        pyinstaller --onefile --name ${{ matrix.output_name }} main.py
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.asset_name }}
+        path: dist/${{ matrix.output_name }}
+        if-no-files-found: error
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    # Only create a release when a tag is pushed
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+
+      - name: Display structure of downloaded files
+        run: ls -R artifacts/
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            artifacts/markdown_to_testcase-windows.exe/markdown_to_testcase.exe
+            artifacts/markdown_to_testcase-macos/markdown_to_testcase
+            artifacts/markdown_to_testcase-linux/markdown_to_testcase
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
