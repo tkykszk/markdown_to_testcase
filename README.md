@@ -2,6 +2,8 @@
 
 A Python tool to extract test cases from Markdown files and convert them to CSV and Excel formats.
 
+![image](docs/images/abst.svg)
+
 ## Features
 
 - Parse test cases from Markdown headings in the format `### TestCases (filename)`
