@@ -2,6 +2,8 @@
 
 マークダウンファイルからテストケースを抽出し、CSVおよびExcel形式に変換するPythonツールです。
 
+![image](docs/images/abst-japanese.svg)
+
 ## 機能
 
 - `### TestCases (ファイル名)` 形式のマークダウン見出しからテストケースを解析
