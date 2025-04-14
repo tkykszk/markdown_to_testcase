@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "markdown_to_testcase"
-version = "0.1.0a0"
+version = "0.1.0a1"
 description = "A tool to extract test cases from markdown files and convert them to CSV and Excel"
 readme = "README.md"
 authors = [

@@ -1,6 +1,6 @@
 # Markdown to Testcase
 
-![image](docs/images/markdown2testcase.png)
+![image](https://raw.githubusercontent.com/tkykszk/markdown_to_testcase/alpharel/docs/images/markdown2testcase.png)
 
 A Python tool to extract test cases from Markdown files and convert them to CSV and Excel formats.
 
