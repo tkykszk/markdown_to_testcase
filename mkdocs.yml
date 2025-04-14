@@ -1,0 +1,65 @@
+site_name: Markdown to Testcase
+site_description: A Python tool to extract test cases from Markdown files and convert them to CSV and Excel formats
+site_url: https://markdown-to-testcase.readthedocs.io/
+repo_url: https://github.com/tkykszk/markdown_to_testcase
+repo_name: tkykszk/markdown_to_testcase
+
+nav:
+  - Home: index.md
+  - Tutorial: tutorial.md
+  - Usage: usage.md
+  - Installation: installation.md
+  - API Reference: api.md
+  - Contributing: contributing.md
+  - 日本語:
+    - ホーム: index_JAPANESE.md
+    - チュートリアル: tutorial_JAPANESE.md
+    - 使用方法: usage_JAPANESE.md
+    - インストール: installation_JAPANESE.md
+
+theme:
+  name: material
+  palette:
+    primary: indigo
+    accent: indigo
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.expand
+    - navigation.indexes
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          selection:
+            docstring_style: google
+          rendering:
+            show_source: true
+            show_root_heading: true
+            show_category_heading: true
+            show_if_no_docstring: false
+
+watch:
+  - markdown_to_testcase
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/tkykszk

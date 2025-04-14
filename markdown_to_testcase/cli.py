@@ -12,8 +12,9 @@ from typing import Optional
 from pathlib import Path
 from loguru import logger
 
-from parser import TestCaseParser
-from converter import TestCaseConverter
+from markdown_to_testcase.parser import TestCaseParser
+from markdown_to_testcase.converter import TestCaseConverter
+from markdown_to_testcase import __version__
 
 app = typer.Typer(help="Tool to convert markdown test cases to CSV and Excel formats")
 
@@ -102,7 +103,7 @@ def convert(
 @app.command()
 def version():
     """Display the version information."""
-    print("markdown_to_testcase v0.1.0")
+    print(f"markdown_to_testcase v{__version__}")
 
 
 if __name__ == "__main__":

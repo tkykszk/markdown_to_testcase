@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "markdown_to_testcase"
+version = "0.1.0a0"
+description = "A tool to extract test cases from markdown files and convert them to CSV and Excel"
+readme = "README.md"
+authors = [
+    {name = "Taka Suzuki", email = "tkykszk@example.com"}
+]
+license = {text = "MIT"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Testing",
+    "Topic :: Text Processing :: Markup :: Markdown",
+]
+requires-python = ">=3.12"
+dependencies = [
+    "loguru>=0.7.2",
+    "openpyxl>=3.1.2",
+    "markdown-it-py>=3.0.0",
+    "pyyaml>=6.0.1",
+    "typer>=0.9.0",
+    "yamllint>=1.33.0",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/tkykszk/markdown_to_testcase"
+"Bug Tracker" = "https://github.com/tkykszk/markdown_to_testcase/issues"
+"Documentation" = "https://markdown-to-testcase.readthedocs.io/"
+
+[project.scripts]
+markdown_to_testcase = "markdown_to_testcase.cli:app"
+
+[tool.setuptools]
+packages = ["markdown_to_testcase"]
+
+[tool.black]
+line-length = 150
+
+[tool.flake8]
+max-line-length = 150

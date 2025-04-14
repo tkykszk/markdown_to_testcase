@@ -9,12 +9,8 @@ import os
 import pytest
 from pathlib import Path
 import tempfile
-import sys
 
-# Add parent directory to path for imports
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from parser import TestCaseParser
+from markdown_to_testcase.parser import TestCaseParser
 
 
 @pytest.fixture

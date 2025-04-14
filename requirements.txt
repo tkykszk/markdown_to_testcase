@@ -4,3 +4,4 @@ markdown-it-py==3.0.0
 pyyaml==6.0.1
 typer==0.9.0
 pyinstaller==6.0.0
+yamllint==1.33.0
