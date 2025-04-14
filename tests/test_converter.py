@@ -9,14 +9,10 @@ import os
 import csv
 import pytest
 import tempfile
-import sys
 from pathlib import Path
 import openpyxl
 
-# Add parent directory to path for imports
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from converter import TestCaseConverter
+from markdown_to_testcase.converter import TestCaseConverter
 
 
 @pytest.fixture
@@ -71,11 +67,14 @@ def test_convert_to_csv(converter, sample_test_cases, monkeypatch):
     
     # Check that the output files were created
     assert len(result) == 2
-    assert "test_file1.md" in result
-    assert "test_file2.md" in result
+    
+    # Find the paths in the result list
+    csv_paths = {os.path.basename(path): path for path in result}
+    assert "test_file1.md" in csv_paths
+    assert "test_file2.md" in csv_paths
     
     # Check the content of the first CSV file
-    csv_path = result["test_file1.md"]
+    csv_path = csv_paths["test_file1.md"]
     assert os.path.exists(csv_path)
     
     with open(csv_path, 'r', newline='', encoding='utf-8') as csvfile:
@@ -89,7 +88,7 @@ def test_convert_to_csv(converter, sample_test_cases, monkeypatch):
         assert rows[1]["Name"] == "Test Case 2"
     
     # Check the content of the second CSV file
-    csv_path = result["test_file2.md"]
+    csv_path = csv_paths["test_file2.md"]
     assert os.path.exists(csv_path)
     
     with open(csv_path, 'r', newline='', encoding='utf-8') as csvfile:
@@ -157,7 +156,7 @@ def test_convert_empty_test_cases(converter):
     """Test converting empty test cases."""
     # Convert empty test cases to CSV
     result_csv = converter.convert_to_csv({})
-    assert result_csv == {}
+    assert result_csv == []
     
     # Convert empty test cases to Excel
     result_excel = converter.convert_to_excel({})

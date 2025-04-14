@@ -143,5 +143,7 @@ cython_debug/
 # Project specific
 output/
 
+# Private design documents
+DESIGN_JAPANESE.md
 
 .windsurfrules

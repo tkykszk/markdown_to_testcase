@@ -1,8 +1,8 @@
 # Markdown to Testcase
 
-A Python tool to extract test cases from Markdown files and convert them to CSV and Excel formats.
+![image](docs/images/markdown2testcase.png)
 
-![image](docs/images/abst.svg)
+A Python tool to extract test cases from Markdown files and convert them to CSV and Excel formats.
 
 ## Features
 
@@ -15,6 +15,8 @@ A Python tool to extract test cases from Markdown files and convert them to CSV 
 
 ## Installation
 
+### From Source
+
 ```bash
 # Clone the repository
 git clone https://github.com/tkykszk/markdown_to_testcase.git
@@ -22,6 +24,43 @@ cd markdown_to_testcase
 
 # Install dependencies
 pip install -r requirements.txt
+```
+
+### Binary Installations
+
+#### Windows
+
+Download the latest `.exe` file from the [Releases](https://github.com/tkykszk/markdown_to_testcase/releases) page and run it directly.
+
+```powershell
+# From the command line
+markdown_to_testcase.exe convert -i input_file.md
+```
+
+#### macOS (Homebrew)
+
+```bash
+# Install using Homebrew
+brew tap tkykszk/markdown_to_testcase
+brew install markdown_to_testcase
+
+# Run the command
+markdown_to_testcase convert -i input_file.md
+```
+
+#### Ubuntu/Debian (apt)
+
+```bash
+# Add the repository
+curl -s https://tkykszk.github.io/markdown_to_testcase/apt/KEY.gpg | sudo apt-key add -
+echo "deb https://tkykszk.github.io/markdown_to_testcase/apt ./" | sudo tee /etc/apt/sources.list.d/markdown_to_testcase.list
+
+# Update package list and install
+sudo apt update
+sudo apt install markdown-to-testcase
+
+# Run the command
+markdown_to_testcase convert -i input_file.md
 ```
 
 ## Usage
@@ -45,6 +84,7 @@ python main.py convert -i input_file.md -o output_dir -F --verbose
 - `-F, --force`: Overwrite output files without asking
 - `-d, --debug`: Enable debug mode (outputs DEBUG level logs)
 - `--verbose`: Show verbose error messages and suggestions for YAML parsing issues
+- `--no-yaml-lint`: Skip running yamllint on YAML content (validation is enabled by default)
 - `-v, --version`: Display version information
 
 ## Input Format
@@ -103,6 +143,7 @@ filename2.md:
 ### Requirements
 
 - Python 3.12+
+- yamllint (required for YAML validation)
 - Dependencies listed in `requirements.txt`
 
 ### Testing
@@ -117,6 +158,65 @@ pytest
 black .
 flake8
 ```
+
+## Building from Source
+
+### Building Windows Executable
+
+```bash
+# Install PyInstaller if not already installed
+pip install pyinstaller
+
+# Build the executable
+pyinstaller --onefile --name markdown_to_testcase main.py
+
+# The executable will be in the dist/ directory
+```
+
+### Packaging for macOS (Homebrew)
+
+1. Create a Homebrew formula in a new repository named `homebrew-markdown_to_testcase`:
+
+```ruby
+# markdown_to_testcase.rb
+class MarkdownToTestcase < Formula
+  desc "A tool to extract test cases from Markdown files"
+  homepage "https://github.com/tkykszk/markdown_to_testcase"
+  url "https://github.com/tkykszk/markdown_to_testcase/archive/refs/tags/v[VERSION].tar.gz"
+  sha256 "[SHA256]"
+  license "MIT"
+
+  depends_on "python@3.12"
+
+  def install
+    virtualenv_install_with_resources
+  end
+
+  test do
+    system "#{bin}/markdown_to_testcase", "--version"
+  end
+end
+```
+
+1. Users can then install with `brew tap` and `brew install` as shown in the Installation section.
+
+### Packaging for Ubuntu/Debian (apt)
+
+1. Create a `debian` directory with the necessary files:
+
+```bash
+mkdir -p debian/source
+```
+
+1. Create the required configuration files (control, rules, changelog, etc)
+
+1. Build the Debian package:
+
+```bash
+dpkg-buildpackage -us -uc
+```
+
+1. Host the package in a repository accessible via apt (e.g., GitHub Pages)
 
 ## License
 
