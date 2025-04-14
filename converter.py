@@ -19,9 +19,21 @@ class TestCaseConverter:
 
     # Common test case fields with order preservation
     TEST_CASE_FIELDS = [
-        "ID", "Name", "Desc", "Pre-conditions", "Test Steps", "Expected Result", 
-        "Actual Result", "Test Data", "Priority", "Severity", "Status",
-        "Environment", "Tested By", "Date", "Comments/Notes"
+        "ID",
+        "Name",
+        "Desc",
+        "Pre-conditions",
+        "Test Steps",
+        "Expected Result",
+        "Actual Result",
+        "Test Data",
+        "Priority",
+        "Severity",
+        "Status",
+        "Environment",
+        "Tested By",
+        "Date",
+        "Comments/Notes",
     ]
 
     def __init__(self, output_dir: str = "output"):
@@ -46,28 +58,28 @@ class TestCaseConverter:
             Dictionary mapping file names to output paths.
         """
         output_files = {}
-        
+
         for file_name, cases in test_cases.items():
             if not cases:
                 logger.warning(f"No test cases to convert for {file_name}")
                 continue
-                
+
             # Create output file path
             base_name = Path(file_name).stem
             output_path = os.path.join(self.output_dir, f"{base_name}.csv")
-            
+
             # Check if file exists
             if os.path.exists(output_path) and not force:
                 response = input(f"File {output_path} already exists. Overwrite? (y/n): ")
-                if response.lower() != 'y':
+                if response.lower() != "y":
                     logger.info(f"Skipping {output_path}")
                     continue
-            
+
             try:
-                with open(output_path, 'w', newline='', encoding='utf-8') as csvfile:
+                with open(output_path, "w", newline="", encoding="utf-8") as csvfile:
                     fieldnames = self.TEST_CASE_FIELDS
                     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-                    
+
                     writer.writeheader()
                     for case in cases:
                         # Normalize keys (handle case sensitivity)
@@ -87,15 +99,15 @@ class TestCaseConverter:
                                         break
                                 if not found:
                                     normalized_case[field] = ""
-                        
+
                         writer.writerow(normalized_case)
-                
+
                 logger.info(f"Created CSV file: {output_path}")
                 output_files[file_name] = output_path
-                
-            except Exception as e:
+
+            except (IOError, csv.Error) as e:
                 logger.error(f"Error creating CSV file {output_path}: {str(e)}")
-        
+
         return output_files
 
     def convert_to_excel(self, test_cases: Dict[str, List[Dict[str, Any]]], force: bool = False) -> Optional[str]:
@@ -112,38 +124,38 @@ class TestCaseConverter:
         if not test_cases:
             logger.warning("No test cases to convert to Excel")
             return None
-            
+
         excel_path = os.path.join(self.output_dir, "test_cases.xlsx")
-        
+
         # Check if file exists
         if os.path.exists(excel_path) and not force:
             response = input(f"File {excel_path} already exists. Overwrite? (y/n): ")
-            if response.lower() != 'y':
-                logger.info(f"Skipping Excel file creation")
+            if response.lower() != "y":
+                logger.info("Skipping Excel file creation")
                 return None
-        
+
         try:
             workbook = openpyxl.Workbook()
             # Remove the default sheet
             default_sheet = workbook.active
             workbook.remove(default_sheet)
-            
+
             for file_name, cases in test_cases.items():
                 if not cases:
                     continue
-                    
+
                 # Create a sheet for each file
                 sheet_name = Path(file_name).stem[:31]  # Excel sheet names are limited to 31 chars
                 sheet = workbook.create_sheet(sheet_name)
-                
+
                 # Add header row
                 for col_idx, field in enumerate(self.TEST_CASE_FIELDS, start=1):
                     cell = sheet.cell(row=1, column=col_idx, value=field)
                     # Style header
                     cell.font = Font(bold=True)
                     cell.fill = PatternFill(start_color="DDDDDD", end_color="DDDDDD", fill_type="solid")
-                    cell.alignment = Alignment(horizontal='center', vertical='center', wrap_text=True)
-                
+                    cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+
                 # Add test case data
                 for row_idx, case in enumerate(cases, start=2):
                     for col_idx, field in enumerate(self.TEST_CASE_FIELDS, start=1):
@@ -158,10 +170,10 @@ class TestCaseConverter:
                                 if key.lower() == field_lower:
                                     value = case[key]
                                     break
-                        
+
                         cell = sheet.cell(row=row_idx, column=col_idx, value=str(value))
                         cell.alignment = Alignment(wrap_text=True)
-                
+
                 # Auto-adjust column widths
                 for col in sheet.columns:
                     max_length = 0
@@ -171,15 +183,15 @@ class TestCaseConverter:
                             cell_length = len(str(cell.value))
                             if cell_length > max_length:
                                 max_length = cell_length
-                    
+
                     # Limit column width to a reasonable size
                     adjusted_width = min(max_length + 2, 50)
                     sheet.column_dimensions[column].width = adjusted_width
-            
+
             workbook.save(excel_path)
             logger.info(f"Created Excel file: {excel_path}")
             return excel_path
-            
-        except Exception as e:
+
+        except (IOError, ValueError) as e:
             logger.error(f"Error creating Excel file {excel_path}: {str(e)}")
             return None

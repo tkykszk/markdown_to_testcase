@@ -83,14 +83,14 @@ another_file.md:
 def test_parse_content(parser, sample_markdown):
     """Test parsing markdown content."""
     result = parser.parse_content(sample_markdown, "test_source.md")
-    
+
     assert len(result) == 2
     assert "sample_file.md" in result
     assert "another_file.md" in result
-    
+
     assert len(result["sample_file.md"]) == 2
     assert len(result["another_file.md"]) == 1
-    
+
     assert result["sample_file.md"][0]["ID"] == "TC001"
     assert result["sample_file.md"][1]["ID"] == "TC002"
     assert result["another_file.md"][0]["ID"] == "TC101"
@@ -101,14 +101,14 @@ def test_parse_file(parser, sample_markdown):
     with tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False) as temp_file:
         temp_file.write(sample_markdown)
         temp_path = temp_file.name
-    
+
     try:
         result = parser.parse_file(temp_path)
-        
+
         assert len(result) == 2
         assert "sample_file.md" in result
         assert "another_file.md" in result
-        
+
         assert len(result["sample_file.md"]) == 2
         assert len(result["another_file.md"]) == 1
     finally:
@@ -120,17 +120,17 @@ def test_parse_yaml_file(parser, sample_yaml):
     with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as temp_file:
         temp_file.write(sample_yaml)
         temp_path = temp_file.name
-    
+
     try:
         result = parser.parse_yaml_file(temp_path)
-        
+
         assert len(result) == 2
         assert "sample_file.md" in result
         assert "another_file.md" in result
-        
+
         assert len(result["sample_file.md"]) == 2
         assert len(result["another_file.md"]) == 1
-        
+
         assert result["sample_file.md"][0]["ID"] == "TC001"
         assert result["sample_file.md"][1]["ID"] == "TC002"
         assert result["another_file.md"][0]["ID"] == "TC101"
@@ -148,7 +148,7 @@ def test_parse_invalid_yaml(parser):
   - This is incorrect indentation
     Expected Result: This won't parse correctly
 """
-    
+
     result = parser.parse_content(invalid_markdown, "invalid_source.md")
     assert len(result) == 0  # Should fail to parse
 
@@ -157,7 +157,7 @@ def test_parse_empty_section(parser):
     """Test parsing an empty test case section."""
     empty_section = """### TestCases (empty.md)
 """
-    
+
     result = parser.parse_content(empty_section, "empty_source.md")
     assert len(result) == 0  # No test cases to parse
 

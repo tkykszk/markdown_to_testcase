@@ -55,21 +55,26 @@ def test_convert_command(runner, sample_markdown):
         md_path = os.path.join(temp_dir, "sample.md")
         with open(md_path, "w", encoding="utf-8") as f:
             f.write(sample_markdown)
-        
+
         # Create output directory
         output_dir = os.path.join(temp_dir, "output")
         os.makedirs(output_dir, exist_ok=True)
-        
+
         # Run the convert command
-        result = runner.invoke(app, [
-            "convert", 
-            "-i", md_path, 
-            "-o", output_dir, 
-            "-F",  # Force overwrite
-            "--no-yaml-lint",  # Skip YAML validation since it's not needed for tests
-            "-d"  # Enable debug mode for more output
-        ])
-        
+        result = runner.invoke(
+            app,
+            [
+                "convert",
+                "-i",
+                md_path,
+                "-o",
+                output_dir,
+                "-F",  # Force overwrite
+                "--no-yaml-lint",  # Skip YAML validation since it's not needed for tests
+                "-d",  # Enable debug mode for more output
+            ],
+        )
+
         # Debug output
         print(f"\nExit code: {result.exit_code}")
         print(f"Output:\n{result.stdout}")
@@ -79,11 +84,11 @@ def test_convert_command(runner, sample_markdown):
             print(f"Contents: {os.listdir(output_dir)}")
         else:
             print(f"Directory does not exist: {output_dir}")
-        
+
         assert result.exit_code == 0
         # Comment this out temporarily while debugging
         # assert "Successfully parsed" in result.stdout
-        
+
         # Check that output files were created - note that file extension is preserved from source
         assert os.path.exists(os.path.join(output_dir, "sample_file.md"))
         assert os.path.exists(os.path.join(output_dir, "another_file.md"))
@@ -92,11 +97,15 @@ def test_convert_command(runner, sample_markdown):
 
 def test_convert_invalid_file(runner):
     """Test the convert command with a non-existent input file."""
-    result = runner.invoke(app, [
-        "convert", 
-        "-i", "non_existent_file.md",
-    ])
-    
+    result = runner.invoke(
+        app,
+        [
+            "convert",
+            "-i",
+            "non_existent_file.md",
+        ],
+    )
+
     assert result.exit_code != 0
     assert "Input file not found" in result.stdout
 
@@ -104,11 +113,15 @@ def test_convert_invalid_file(runner):
 def test_convert_unsupported_extension(runner):
     """Test the convert command with an unsupported file extension."""
     with tempfile.NamedTemporaryFile(suffix=".txt") as temp_file:
-        result = runner.invoke(app, [
-            "convert", 
-            "-i", temp_file.name,
-        ])
-        
+        result = runner.invoke(
+            app,
+            [
+                "convert",
+                "-i",
+                temp_file.name,
+            ],
+        )
+
         assert result.exit_code != 0
         assert "Unsupported file extension" in result.stdout
 
@@ -120,16 +133,20 @@ def test_convert_debug_mode(runner, sample_markdown):
         md_path = os.path.join(temp_dir, "sample.md")
         with open(md_path, "w", encoding="utf-8") as f:
             f.write(sample_markdown)
-        
+
         # Run the convert command with debug mode
-        result = runner.invoke(app, [
-            "convert", 
-            "-i", md_path, 
-            "-d",  # Debug mode
-            "-F",   # Force overwrite
-            "--no-yaml-lint"  # Skip YAML validation since it's not needed for tests
-        ])
-        
+        result = runner.invoke(
+            app,
+            [
+                "convert",
+                "-i",
+                md_path,
+                "-d",  # Debug mode
+                "-F",  # Force overwrite
+                "--no-yaml-lint",  # Skip YAML validation since it's not needed for tests
+            ],
+        )
+
         assert result.exit_code == 0
         # In debug mode, more verbose output should be present
         assert "Processing file" in result.stdout
