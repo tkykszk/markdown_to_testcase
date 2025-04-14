@@ -44,7 +44,7 @@ jobs:
         pyinstaller --onefile --name markdown_to_testcase markdown_to_testcase/__main__.py
     
     - name: Upload binaries
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.asset_name }}
         path: dist/${{ matrix.artifact_name }}
