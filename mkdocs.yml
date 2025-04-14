@@ -48,13 +48,11 @@ plugins:
   - mkdocstrings:
       handlers:
         python:
-          selection:
-            docstring_style: google
-          rendering:
-            show_source: true
-            show_root_heading: true
-            show_category_heading: true
-            show_if_no_docstring: false
+          docstring_style: google
+          show_source: true
+          show_root_heading: true
+          show_category_heading: true
+          show_if_no_docstring: false
 
 watch:
   - markdown_to_testcase
