@@ -8,7 +8,7 @@ Command-line interface for the markdown_to_testcase tool.
 import os
 import sys
 import typer
-from typing import Optional
+# from typing import Optional  # 未使用のためコメントアウト
 from pathlib import Path
 from loguru import logger
 
@@ -84,7 +84,7 @@ def convert(
         logger.warning("No CSV files created")
 
     # Convert to Excel file
-    excel_file = converter.convert_to_excel(test_cases, force=force)
+    _ = converter.convert_to_excel(test_cases, force=force)  # 戻り値は使用しないがメソッドは実行する
 
     logger.info("Conversion completed")
 

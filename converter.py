@@ -105,7 +105,7 @@ class TestCaseConverter:
                 logger.info(f"Created CSV file: {output_path}")
                 output_files[file_name] = output_path
 
-            except Exception as e:
+            except (IOError, csv.Error) as e:
                 logger.error(f"Error creating CSV file {output_path}: {str(e)}")
 
         return output_files
@@ -131,7 +131,7 @@ class TestCaseConverter:
         if os.path.exists(excel_path) and not force:
             response = input(f"File {excel_path} already exists. Overwrite? (y/n): ")
             if response.lower() != "y":
-                logger.info(f"Skipping Excel file creation")
+                logger.info("Skipping Excel file creation")
                 return None
 
         try:
@@ -192,6 +192,6 @@ class TestCaseConverter:
             logger.info(f"Created Excel file: {excel_path}")
             return excel_path
 
-        except Exception as e:
+        except (IOError, ValueError) as e:
             logger.error(f"Error creating Excel file {excel_path}: {str(e)}")
             return None

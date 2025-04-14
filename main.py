@@ -5,7 +5,7 @@
 Main entry point for the markdown_to_testcase tool.
 """
 
-import sys
+# import sys  # 未使用のためコメントアウト
 from cli import app
 
 if __name__ == "__main__":

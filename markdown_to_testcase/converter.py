@@ -68,7 +68,7 @@ class TestCaseConverter:
                 logger.info(f"Created CSV file: {csv_path}")
                 csv_files.append(csv_path)
 
-            except Exception as e:
+            except (IOError, csv.Error) as e:
                 logger.error(f"Error creating CSV file {csv_path}: {str(e)}")
 
         return csv_files
@@ -135,7 +135,7 @@ class TestCaseConverter:
                         try:
                             if len(str(cell.value)) > max_length:
                                 max_length = len(str(cell.value))
-                        except:
+                        except (TypeError, ValueError):
                             pass
                     adjusted_width = (max_length + 2) * 1.2
                     sheet.column_dimensions[column].width = adjusted_width
@@ -144,6 +144,6 @@ class TestCaseConverter:
             logger.info(f"Created Excel file: {excel_path}")
             return excel_path
 
-        except Exception as e:
+        except (IOError, openpyxl.utils.exceptions.InvalidFileException) as e:
             logger.error(f"Error creating Excel file {excel_path}: {str(e)}")
             return None

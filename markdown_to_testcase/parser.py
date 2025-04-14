@@ -9,7 +9,7 @@ import re
 import os
 import subprocess
 from pathlib import Path
-from typing import Dict, List, Tuple, Optional, Any
+from typing import Dict, List, Any
 import yaml
 from loguru import logger
 from markdown_it import MarkdownIt
@@ -49,7 +49,7 @@ class TestCaseParser:
 
         return self.parse_content(content, file_path)
 
-    def run_yamllint(self, yaml_content: str, file_name: str, source_path: str) -> List[str]:
+    def run_yamllint(self, yaml_content: str, file_name: str, _source_path: str) -> List[str]:
         """
         Run yamllint on the YAML content and return any errors.
 
@@ -64,7 +64,7 @@ class TestCaseParser:
         try:
             # Create a temporary file with the YAML content
             temp_file = Path(f"/tmp/yamllint_temp_{file_name.replace('/', '_')}.yaml")
-            temp_file.write_text(yaml_content)
+            temp_file.write_text(yaml_content, encoding="utf-8")
 
             # Run yamllint on the temporary file
             result = subprocess.run(["yamllint", "-f", "parsable", str(temp_file)], capture_output=True, text=True, check=False)
@@ -93,7 +93,7 @@ class TestCaseParser:
 
                 return formatted_errors
 
-        except Exception as e:
+        except (IOError, subprocess.SubprocessError) as e:
             logger.warning(f"Failed to run yamllint: {str(e)}")
             return []
 
@@ -139,7 +139,7 @@ class TestCaseParser:
                 if not isinstance(parsed_test_cases, list):
                     if self.verbose:
                         logger.error(f"YAML content in section for {file_name} is not a list. Found type: {type(parsed_test_cases)}")
-                        logger.error(f"Content should start with '- ' for each test case item")
+                        logger.error("Content should start with '- ' for each test case item")
                     else:
                         logger.error(f"YAML parse error: Expected list format in section for {file_name}")
                     continue
@@ -211,6 +211,6 @@ class TestCaseParser:
             else:
                 logger.error(f"YAML parse error in file {file_path}. Use --verbose for details.")
             return {}
-        except Exception as e:
+        except (IOError, subprocess.SubprocessError) as e:
             logger.error(f"Error parsing YAML file {file_path}: {str(e)}")
             return {}
