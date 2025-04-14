@@ -45,14 +45,7 @@ markdown_extensions:
 
 plugins:
   - search
-  - mkdocstrings:
-      handlers:
-        python:
-          docstring_style: google
-          show_source: true
-          show_root_heading: true
-          show_category_heading: true
-          show_if_no_docstring: false
+  - mkdocstrings
 
 watch:
   - markdown_to_testcase
