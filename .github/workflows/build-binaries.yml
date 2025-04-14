@@ -41,7 +41,7 @@ jobs:
     
     - name: Build with PyInstaller
       run: |
-        pyinstaller --onefile --name markdown_to_testcase markdown_to_testcase/main.py
+        pyinstaller --onefile --name markdown_to_testcase markdown_to_testcase/__main__.py
     
     - name: Upload binaries
       uses: actions/upload-artifact@v3
