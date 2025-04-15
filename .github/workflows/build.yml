@@ -63,18 +63,29 @@ jobs:
           path: artifacts
 
       - name: Display structure of downloaded files
-        run: ls -R artifacts/
+        run: ls -lR artifacts/
+
+      - name: Sleep for GitHub release propagation
+        run: sleep 30
+
+      - name: Create stub file for testing
+        run: |
+          echo "This is a test file" > artifacts/test-stub.txt
+          ls -l artifacts/test-stub.txt
+        shell: bash
 
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            artifacts/markdown_to_testcase-windows.exe/markdown_to_testcase.exe
-            artifacts/markdown_to_testcase-macos/markdown_to_testcase
-            artifacts/markdown_to_testcase-linux/markdown_to_testcase
-          draft: false
+            artifacts/test-stub.txt
+            artifacts/markdown_to_testcase-windows.exe/markdown_to_testcase.exe#markdown_to_testcase-${{ github.ref_name }}.exe
+            artifacts/markdown_to_testcase-macos/markdown_to_testcase#markdown_to_testcase-${{ github.ref_name }}-macos
+            artifacts/markdown_to_testcase-linux/markdown_to_testcase#markdown_to_testcase-${{ github.ref_name }}-linux
+          draft: true
           prerelease: false
           generate_release_notes: true
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
