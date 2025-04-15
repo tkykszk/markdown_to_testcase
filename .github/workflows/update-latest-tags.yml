@@ -41,11 +41,10 @@ jobs:
           
           echo "major_minor=${MAJOR_VERSION}.${MINOR_VERSION}" >> $GITHUB_OUTPUT
       
-      - name: Update latest tags
+      - name: Update version tags only
         run: |
-          # latestタグを更新
-          git tag -f latest
-          git push https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/tkykszk/markdown_to_testcase.git latest -f
+          # latestタグの更新はワークフローファイルの制限のため説明
+          # GitHubの「Latest release」機能を使用するので代用可能
           
           # メジャーバージョンの最新タグを更新
           git tag -f v${{ steps.extract_version.outputs.major }}-latest
