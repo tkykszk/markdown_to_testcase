@@ -55,6 +55,7 @@ jobs:
     
     - name: List artifacts directory (detailed)
       run: ls -lR artifacts/
+      shell: bash
 
     - name: Sleep for GitHub release propagation
       run: sleep 10
