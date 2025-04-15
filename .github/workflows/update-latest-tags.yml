@@ -8,7 +8,6 @@ on:
 # GitHubリリース作成に必要な権限を追加
 permissions:
   contents: write
-  workflows: write  # ワークフローファイルの変更を許可
 
 jobs:
   update-latest-tags:
@@ -55,3 +54,5 @@ jobs:
           # マイナーバージョンの最新タグを更新
           git tag -f v${{ steps.extract_version.outputs.major_minor }}-latest
           git push origin v${{ steps.extract_version.outputs.major_minor }}-latest -f
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
