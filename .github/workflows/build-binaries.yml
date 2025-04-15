@@ -57,7 +57,10 @@ jobs:
       if: startsWith(github.ref, 'refs/tags/')
       uses: softprops/action-gh-release@v1
       with:
-        files: dist/${{ matrix.artifact_name }}
+        files: |
+          artifacts/markdown_to_testcase-windows-x86_64.exe
+          artifacts/markdown_to_testcase-macos-x86_64
+          artifacts/markdown_to_testcase-linux-x86_64
         draft: false
         prerelease: ${{ contains(github.ref, '-alpha') || contains(github.ref, '-beta') || contains(github.ref, '-rc') }}
         name: ${{ github.ref_name }}
@@ -79,3 +82,5 @@ jobs:
           ```
           https://github.com/tkykszk/markdown_to_testcase/releases/latest/download/[ファイル名]
           ```
+      env:
+        GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
