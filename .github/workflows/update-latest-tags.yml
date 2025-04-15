@@ -45,14 +45,12 @@ jobs:
         run: |
           # latestタグを更新
           git tag -f latest
-          git push origin latest -f
+          git push https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/tkykszk/markdown_to_testcase.git latest -f
           
           # メジャーバージョンの最新タグを更新
           git tag -f v${{ steps.extract_version.outputs.major }}-latest
-          git push origin v${{ steps.extract_version.outputs.major }}-latest -f
+          git push https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/tkykszk/markdown_to_testcase.git v${{ steps.extract_version.outputs.major }}-latest -f
           
           # マイナーバージョンの最新タグを更新
           git tag -f v${{ steps.extract_version.outputs.major_minor }}-latest
-          git push origin v${{ steps.extract_version.outputs.major_minor }}-latest -f
-        env:
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          git push https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/tkykszk/markdown_to_testcase.git v${{ steps.extract_version.outputs.major_minor }}-latest -f
