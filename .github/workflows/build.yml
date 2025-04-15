@@ -65,6 +65,9 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -lR artifacts/
 
+      - name: Sleep for GitHub release propagation
+        run: sleep 30
+
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
@@ -73,7 +76,7 @@ jobs:
             artifacts/markdown_to_testcase-windows.exe/markdown_to_testcase.exe
             artifacts/markdown_to_testcase-macos/markdown_to_testcase
             artifacts/markdown_to_testcase-linux/markdown_to_testcase
-          draft: false
+          draft: true
           prerelease: false
           generate_release_notes: true
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
