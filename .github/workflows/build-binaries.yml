@@ -53,8 +53,15 @@ jobs:
         name: ${{ matrix.asset_name }}
         path: dist/${{ matrix.artifact_name }}
     
-    - name: List artifacts directory (detailed)
-      run: ls -lR artifacts/
+    - name: List artifacts directory (cross-platform)
+      run: |
+        if [ -d "artifacts" ]; then
+          ls -lR artifacts/
+        else
+          echo "artifacts/ directory not found"
+          mkdir -p artifacts
+          echo "Created artifacts directory"
+        fi
       shell: bash
 
     - name: Sleep for GitHub release propagation
