@@ -6,6 +6,10 @@ on:
       - 'v*'
   workflow_dispatch:
 
+# GitHubリリース作成に必要な権限を追加
+permissions:
+  contents: write
+
 jobs:
   build-binaries:
     strategy:
@@ -55,4 +59,23 @@ jobs:
       with:
         files: dist/${{ matrix.artifact_name }}
         draft: false
-        prerelease: false
+        prerelease: ${{ contains(github.ref, '-alpha') || contains(github.ref, '-beta') || contains(github.ref, '-rc') }}
+        name: ${{ github.ref_name }}
+        body: |
+          ## ${{ github.ref_name }} リリース
+          
+          ### マークダウンからテストケースへの変換ツール
+          
+          このリリースには次のバイナリが含まれています：
+          
+          | プラットフォーム | ダウンロードリンク |
+          |--------------|------------------|
+          | Windows | [markdown_to_testcase-windows-x86_64.exe](https://github.com/tkykszk/markdown_to_testcase/releases/download/${{ github.ref_name }}/markdown_to_testcase-windows-x86_64.exe) |
+          | macOS | [markdown_to_testcase-macos-x86_64](https://github.com/tkykszk/markdown_to_testcase/releases/download/${{ github.ref_name }}/markdown_to_testcase-macos-x86_64) |
+          | Linux | [markdown_to_testcase-linux-x86_64](https://github.com/tkykszk/markdown_to_testcase/releases/download/${{ github.ref_name }}/markdown_to_testcase-linux-x86_64) |
+          
+          常に最新版にアクセスするには以下のURLを使用できます：
+          
+          ```
+          https://github.com/tkykszk/markdown_to_testcase/releases/latest/download/[ファイル名]
+          ```

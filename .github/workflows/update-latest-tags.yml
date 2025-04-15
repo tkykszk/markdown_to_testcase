@@ -1,0 +1,56 @@
+name: Update Latest Tags
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+# GitHubリリース作成に必要な権限を追加
+permissions:
+  contents: write
+
+jobs:
+  update-latest-tags:
+    runs-on: ubuntu-latest
+    if: ${{ !contains(github.ref, '-alpha') && !contains(github.ref, '-beta') && !contains(github.ref, '-rc') }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Set git identity
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Extract version from tag
+        id: extract_version
+        run: |
+          # タグからvプレフィックスを削除
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          
+          # メジャーとマイナーバージョンを抽出
+          MAJOR_VERSION=$(echo $VERSION | cut -d. -f1)
+          echo "major=$MAJOR_VERSION" >> $GITHUB_OUTPUT
+          
+          MINOR_VERSION=$(echo $VERSION | cut -d. -f2)
+          echo "minor=$MINOR_VERSION" >> $GITHUB_OUTPUT
+          
+          echo "major_minor=${MAJOR_VERSION}.${MINOR_VERSION}" >> $GITHUB_OUTPUT
+      
+      - name: Update latest tags
+        run: |
+          # latestタグを更新
+          git tag -f latest
+          git push origin latest -f
+          
+          # メジャーバージョンの最新タグを更新
+          git tag -f v${{ steps.extract_version.outputs.major }}-latest
+          git push origin v${{ steps.extract_version.outputs.major }}-latest -f
+          
+          # マイナーバージョンの最新タグを更新
+          git tag -f v${{ steps.extract_version.outputs.major_minor }}-latest
+          git push origin v${{ steps.extract_version.outputs.major_minor }}-latest -f
