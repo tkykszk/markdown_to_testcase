@@ -1,5 +1,8 @@
 name: Update Latest Tags
 
+# ワークフローファイルを含むタグの更新はGitHub Actionsから直接できないため、このワークフローは無効化されています。
+# タグの更新が必要な場合は、ローカルで行うか、リポジトリ設定で「Allow GitHub Actions to create and approve pull requests」を有効にする必要があります。
+
 on:
   release:
     types: [published]
@@ -12,7 +15,7 @@ permissions:
 jobs:
   update-latest-tags:
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.ref, '-alpha') && !contains(github.ref, '-beta') && !contains(github.ref, '-rc') }}
+    if: false  # ワークフロー全体を無効化
     
     steps:
       - name: Checkout code
