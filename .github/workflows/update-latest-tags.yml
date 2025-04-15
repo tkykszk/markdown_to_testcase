@@ -8,6 +8,7 @@ on:
 # GitHubリリース作成に必要な権限を追加
 permissions:
   contents: write
+  workflows: write  # ワークフローファイルの変更を許可
 
 jobs:
   update-latest-tags:
